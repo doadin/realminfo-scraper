@@ -1,0 +1,26 @@
+name: Package
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+    - env: # Or as an environment variable
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+    - run: npm install --location=global yarn
+    - run: npm install
+    - run: >
+      cat > $GITHUB_WORKSPACE <<EOL
+      CLIENT_ID=$CLIENT_ID
+      CLIENT_SECRET=$CLIENT_SECRET
+      EOL
+    - run: npm start
